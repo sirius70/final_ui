@@ -99,7 +99,7 @@ class _passState extends State<pass> {
                           children: [
                             TextField(
                               decoration: ThemeHelper().textInputDecoration(
-                                  'Old password', 'Enter old password'),
+                                  'Email ID', 'Enter email ID'),
                               onChanged: (v) {
                                 setState(() {
                                   oldPass = v;

@@ -1,13 +1,18 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_ui/common/theme_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:login_ui/model/slotModel.dart';
 import 'package:login_ui/pages/widgets/qr_scan.dart';
+import 'package:login_ui/pages/widgets/stationdetail.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../feedback.dart';
+import '../slotDetail.dart';
 
 class slot extends StatefulWidget {
   slot({Key key, this.id}) : super(key: key);
@@ -87,7 +92,6 @@ class _slotState extends State<slot> {
         'slotTiming': dropdownvalue,
         'date': DateTime.now()};
 
-
     DocumentReference docRef = doc.reference;
     await FirebaseFirestore.instance
         .collection('stations')
@@ -96,6 +100,18 @@ class _slotState extends State<slot> {
     await FirebaseFirestore.instance
         .collection('slotDetails')
         .add(slotDetail);
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => slotDetails(
+          slotDetail: SlotModel(
+            uid: document["uid"],
+            stationId: document['stationId'],
+            slotTiming: document['slotTiming'],
+            date: document['Date'],
+          ),
+        )));
+
+
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
           builder: (context) => qrCode(
