@@ -4,7 +4,6 @@ import 'package:login_ui/common/theme_helper.dart';
 import 'package:login_ui/pages/widgets/pass.dart';
 import 'package:login_ui/pages/widgets/pin.dart';
 import 'package:login_ui/pages/widgets/prof.dart';
-import 'package:login_ui/utils/sharedprefs.dart';
 
 class Profile extends StatefulWidget {
   final String UID;

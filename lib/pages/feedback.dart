@@ -115,19 +115,19 @@ class _FeedBackState extends State<FeedBack> {
                           SizedBox(height: 175),
                           Container(
                             decoration:
-                                ThemeHelper().buttonBoxDecoration(context),
+                            ThemeHelper().buttonBoxDecoration(context),
                             child: ElevatedButton(
                               style: ThemeHelper().buttonStyle(),
                               onPressed: () async {
                                 final user =
-                                    await FirebaseAuth.instance.currentUser;
+                                await FirebaseAuth.instance.currentUser;
                                 //adding into database
                                 Map<String, dynamic> data = {
                                   "uid": user.uid,
-                                  "userName":user.email,
+                                  "userName": user.email,
                                   "feed": feed.text,
-                                  "workingCondition":isSwitched,
-                                  "stationId":widget.stationId,
+                                  "workingCondition": isSwitched,
+                                  "stationId": widget.stationId,
                                 };
                                 FirebaseFirestore.instance
                                     .collection("feedback")

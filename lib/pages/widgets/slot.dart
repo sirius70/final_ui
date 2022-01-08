@@ -54,7 +54,6 @@ class _slotState extends State<slot> {
   }
 
   void openCheckout() async {
-
     var options = {
       'key': 'rzp_test_kOmQ6n4iunyQhQ',
       'amount': totalAmount * 100,
@@ -74,12 +73,22 @@ class _slotState extends State<slot> {
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     Fluttertoast.showToast(msg: 'SUCCESS: ' + response.paymentId);
-    QuerySnapshot querySnap = await FirebaseFirestore.instance.collection('stations').where('stationId', isEqualTo: widget.id).get();
-    QueryDocumentSnapshot doc = querySnap.docs[0];  // Assumption: the query returns only one document, THE doc you are looking for.
+    QuerySnapshot querySnap = await FirebaseFirestore.instance
+        .collection('stations')
+        .where('stationId', isEqualTo: widget.id)
+        .get();
+    QueryDocumentSnapshot doc = querySnap.docs[
+    0]; // Assumption: the query returns only one document, THE doc you are looking for.
     DocumentReference docRef = doc.reference;
-    await FirebaseFirestore.instance.collection('stations').doc(docRef.id).update({"availability": FieldValue.increment(-1)});
+    await FirebaseFirestore.instance
+        .collection('stations')
+        .doc(docRef.id)
+        .update({"availability": FieldValue.increment(-1)});
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => qrCode()),
+      MaterialPageRoute(
+          builder: (context) => qrCode(
+            stationModelid: widget.id,
+          )),
           (route) => false,
     );
   }

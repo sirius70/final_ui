@@ -103,6 +103,7 @@ class _stationState extends State<station> {
               },
             ),
           ),
+          SizedBox(height: 30,),
           StreamBuilder(
               stream: (searchtxt != "" && searchtxt != null)
                   ? FirebaseFirestore.instance
@@ -131,6 +132,7 @@ class _stationState extends State<station> {
                             height: 50,
                             child: Image.network(document['imgUrl']),
                           ),
+
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Stationdetail(

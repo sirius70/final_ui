@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:login_ui/common/theme_helper.dart';
@@ -13,14 +14,13 @@ import '../feedback.dart';
 // ));
 
 class qrCode extends StatefulWidget {
+  final String stationModelid;
 
   qrCode({Key key, this.stationModelid}) : super(key: key);
   @override
   qrCodeState createState() {
     return new qrCodeState();
   }
-
-  final String stationModelid;
 }
 
 class qrCodeState extends State<qrCode> {
@@ -61,14 +61,22 @@ class qrCodeState extends State<qrCode> {
         elevation: 0.0,
         leading: IconButton(
           icon: Icon(Icons.message),
-          onPressed: () async{
-            QuerySnapshot querySnap = await FirebaseFirestore.instance.collection('stations').where('stationId', isEqualTo: widget.stationModelid).get();
-            QueryDocumentSnapshot doc = querySnap.docs[0];  // Assumption: the query returns only one document, THE doc you are looking for.
-            DocumentReference docRef = doc.reference;
-
-            await FirebaseFirestore.instance.collection('stations').doc(docRef.id);
-
-            Navigator.push(context, MaterialPageRoute(builder: (context) => FeedBack(stationId: widget.stationModelid,)));
+          onPressed: () async {
+            final user = await FirebaseAuth.instance.currentUser;
+            //adding into database
+            Map<String, dynamic> data = {
+              "uid": user.uid,
+              "userName": user.email,
+              "stationId": widget.stationModelid,
+            };
+            FirebaseFirestore.instance.collection("qrcode").add(data);
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => FeedBack(
+                    stationId: widget.stationModelid,
+                  )),
+                  (route) => false,
+            );
           },
         ),
         centerTitle: true,
@@ -87,7 +95,6 @@ class qrCodeState extends State<qrCode> {
         ),
       ),
       backgroundColor: Colors.white,
-
       body: Center(
         // child: Column(
         //     children: [
@@ -119,7 +126,6 @@ class qrCodeState extends State<qrCode> {
         //  ]
         //)
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.teal.shade400,
         icon: Icon(Icons.camera_alt),
@@ -127,9 +133,6 @@ class qrCodeState extends State<qrCode> {
         onPressed: _scanQR,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-
-
     );
   }
 }

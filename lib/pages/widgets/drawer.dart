@@ -4,6 +4,7 @@ import 'package:login_ui/pages/widgets/vehicle.dart';
 import 'package:login_ui/utils/sharedprefs.dart';
 
 import '../login_page.dart';
+import '../slotDetail.dart';
 // /import '../prof2.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
@@ -29,16 +30,16 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                 text: 'Profile',
                 icon: Icons.people,
                 onClicked: () => selectedItem(context, 0)),
-            // const SizedBox(height: 16),
-            // buildMenuItem(
-            //     text: 'My Vehicles',
-            //     icon: Icons.car_rental,
-            //     onClicked: () => selectedItem(context, 1)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Slot Booking Details',
+                icon: Icons.space_bar,
+                onClicked: () => selectedItem(context, 1)),
             const SizedBox(height: 16),
             buildMenuItem(
                 text: 'Logout',
                 icon: Icons.logout,
-                onClicked: () => selectedItem(context, 1)),
+                onClicked: () => selectedItem(context, 2)),
           ],
         ),
       ),
@@ -73,12 +74,12 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         ));
 
         break;
-      // case 1:
-      //   Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => VehicleProfile(),
-      //   ));
-      //   break;
       case 1:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => slotDetails(),
+        ));
+        break;
+      case 2:
         Navigator.pushNamed(context, '/');
         break;
     }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_ui/common/theme_helper.dart';
 import 'package:login_ui/pages/reset_password_page.dart';
+import 'package:login_ui/pages/widgets/pass.dart';
 import 'package:login_ui/pages/widgets/home.dart';
 import 'package:login_ui/pages/widgets/personal_info.dart';
 import 'package:login_ui/utils/sharedprefs.dart';
@@ -18,13 +20,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  var profileData;
+
+  getSuggestion(String UID) => FirebaseFirestore.instance
+      .collection('user')
+      .where('email', isEqualTo: email)
+      .snapshots();
+
   double _headerHeight = 75;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController email = TextEditingController();
 
   // String phoneNumber = "";
   final TextEditingController phone = TextEditingController();
-  final TextEditingController pass = TextEditingController();
+  final TextEditingController passw = TextEditingController();
 
   final _auth = FirebaseAuth.instance;
 
@@ -123,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: ThemeHelper().textInputDecoration(
                                 'Password', 'Enter password'),
                             autofocus: false,
-                            controller: pass,
+                            controller: passw,
                             validator: (value) {
                               RegExp regex = new RegExp(r'^.{6,}$');
                               if (value.isEmpty) {
@@ -134,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             },
                             onSaved: (value) {
-                              pass.text = value;
+                              passw.text = value;
                             },
                             textInputAction: TextInputAction.done,
                           ),
@@ -171,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: ElevatedButton(
                               style: ThemeHelper().buttonStyle(),
                               onPressed: () {
-                                signIn(email.text, pass.text);
+                                signIn(email.text, passw.text);
                               }, //after login redirect to homepage
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
@@ -259,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 30),
                       new Text(
-                          'Enter your mobile number to reset your password',
+                          'Enter your email id to reset your password',
                           style: TextStyle(
                               fontSize: 15, color: Colors.grey.shade600)),
                       SizedBox(height: 30),
@@ -273,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
 
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: 'Mobile No.',
+                            labelText: 'Email ID',
                             hintText: '',
                             fillColor: Colors.white,
                             filled: true,
@@ -295,12 +305,12 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.red, width: 2.0)),
                             prefix: Padding(
                               padding: EdgeInsets.all(4),
-                              child: Text('+91'),
+                              //child: Text('+91'),
                             ),
                           ),
-                          keyboardType: TextInputType.number,
-                          controller: phone,
-                          maxLength: 10,
+                          //keyboardType: TextInputType.number,
+                          //controller: phone,
+                          //maxLength: 10,
                           autofocus: true,
                         ),
                       ),
@@ -312,9 +322,10 @@ class _LoginPageState extends State<LoginPage> {
                           autofocus: true,
                           style: ThemeHelper().buttonStyle(),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) =>
-                                    ResetPassword(phone.text)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => pass()));
                           },
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(40, 10, 40, 10),

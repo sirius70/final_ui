@@ -48,7 +48,7 @@ class Stationdetail extends StatelessWidget {
               Text(stationModel.connectorType),
               Text(stationModel.contact),
               Text('Slots Available :::: ${stationModel.availability}'),
-              SizedBox(height: 90),
+              SizedBox(height: 50),
               Container(
                 decoration: ThemeHelper().buttonBoxDecoration(context),
                 child: ElevatedButton(
@@ -101,7 +101,7 @@ class Stationdetail extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 70,),
               Text('EV Feedback',style: TextStyle(fontSize: 20),),
               Expanded(
                 child: StreamBuilder(

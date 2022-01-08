@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_ui/common/theme_helper.dart';
 import 'package:login_ui/model/user_model.dart';
-import 'package:login_ui/pages/widgets/vehicle_info.dart';
 
 import 'home.dart';
 
