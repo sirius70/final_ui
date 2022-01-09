@@ -1,4 +1,4 @@
-import 'dart:html';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -88,6 +88,7 @@ class _slotState extends State<slot> {
     final user = await FirebaseAuth.instance.currentUser;
     // Assumption: the query returns only one document, THE doc you are looking for.
     var slotDetail = {'uid': user.uid,
+      'username' : user.email,
        'stationId': widget.id,
         'slotTiming': dropdownvalue,
         'date': DateTime.now()};
@@ -101,15 +102,15 @@ class _slotState extends State<slot> {
         .collection('slotDetails')
         .add(slotDetail);
 
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => slotDetails(
-          slotDetail: SlotModel(
-            uid: document["uid"],
-            stationId: document['stationId'],
-            slotTiming: document['slotTiming'],
-            date: document['Date'],
-          ),
-        )));
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => slotDetails(
+    //       slotModel: SlotModel(
+    //         uid: document['uid'],
+    //         stationId: document['stationId'],
+    //         slotTiming: document['slotTiming'],
+    //         date: document['Date'],
+    //       ),
+    //     )));
 
 
     Navigator.of(context).pushAndRemoveUntil(
