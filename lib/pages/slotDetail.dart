@@ -22,6 +22,8 @@ class _slotDetailsState extends State<slotDetails> {
       .where('uid', isEqualTo: UID)
       .snapshots();
 
+  String formattedDate = DateFormat('yyyy-MM-dd – kk:mm'). format(dateFromFirebase);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
