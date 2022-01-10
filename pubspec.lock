@@ -309,7 +309,11 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.12.10"
+=======
+    version: "0.12.11"
+>>>>>>> d106e0155078f2a45cfcade66ec1bb9c327aa1b2
   meta:
     dependency: transitive
     description:
@@ -489,7 +493,11 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.4.2"
+=======
+    version: "0.4.3"
+>>>>>>> d106e0155078f2a45cfcade66ec1bb9c327aa1b2
   typed_data:
     dependency: transitive
     description:
@@ -503,7 +511,11 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "2.1.0"
+=======
+    version: "2.1.1"
+>>>>>>> d106e0155078f2a45cfcade66ec1bb9c327aa1b2
   win32:
     dependency: transitive
     description:

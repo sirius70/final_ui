@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_ui/common/theme_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:login_ui/model/slotModel.dart';
 import 'package:login_ui/pages/widgets/qr_scan.dart';
 import 'package:login_ui/pages/widgets/stationdetail.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
