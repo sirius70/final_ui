@@ -2,27 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_ui/common/theme_helper.dart';
 import 'package:login_ui/model/slotModel.dart';
+import 'package:intl/intl.dart';
 
 class slotDetails extends StatefulWidget {
   //final SlotModel slotModel;
   final String id;
 
   const slotDetails({key, this.id}) : super(key: key);
+
   @override
   _slotDetailsState createState() => _slotDetailsState();
 }
 
-
 class _slotDetailsState extends State<slotDetails> {
-
   var slotDetails;
 
   getSuggestion(String UID) => FirebaseFirestore.instance
       .collection('slotDetails')
-      .where('uid', isEqualTo: UID)
+      .where('uid', isEqualTo: "SWQvViVudHceOjcCn4mRcLNFC8z2")
       .snapshots();
 
-  String formattedDate = DateFormat('yyyy-MM-dd – kk:mm'). format(dateFromFirebase);
+  // String formattedDate = DateFormat('yyyy-MM-dd – kk:mm'). format(dateFromFirebase);
 
   @override
   Widget build(BuildContext context) {
@@ -36,97 +36,39 @@ class _slotDetailsState extends State<slotDetails> {
         toolbarHeight: 75,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20)),
             gradient: LinearGradient(
                 colors: [Colors.teal.shade400, Colors.grey],
                 begin: Alignment.bottomCenter,
-                end: Alignment.topCenter
-            ),
+                end: Alignment.topCenter),
           ),
         ),
       ),
       backgroundColor: Colors.white,
-        body: StreamBuilder(
+      body: StreamBuilder(
         stream: getSuggestion(widget.id),
-        builder:
-        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          var snapshotData = snapshot.data.docs[0];
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                SafeArea(
-                  child: Container(
-                    //this is login form
-                    padding: EdgeInsets.fromLTRB(25, 50, 25, 10),
-                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 30.0),
-                        Text(
-                          'User',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.normal),
-                        ),
-                        Card(
-                          child: ListTile(
-                            title: Text(snapshotData['username']),
-                          ),
-                        ),
-                        SizedBox(height: 30.0),
-                        Text(
-                          'Station ID',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.normal),
-                        ),
-                        Card(
-                          child: ListTile(
-                            title: Text(snapshotData['stationId']),
-                          ),
-                        ),
-                        SizedBox(height: 30.0),
-                        Text(
-                          'SLot Timing',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.normal),
-                        ),
-                        Card(
-                          child: ListTile(
-                            title: Text(snapshotData['slotTiming']),
-                          ),
-                        ),
-                        // SizedBox(height: 30.0),
-                        // Text(
-                        //   'Slot Booking Date',
-                        //   textAlign: TextAlign.start,
-                        //   style: TextStyle(
-                        //       fontSize: 15, fontWeight: FontWeight.normal),
-                        // ),
-                        // Card(
-                        //   child: ListTile(
-                        //     title: Text(snapshotData['date']),
-                        //   ),
-                        // ),
-                      ],
-                    ),
+          return Container(
+            child: ListView(
+              children: snapshot.data.docs.map((document) {
+                return Card(
+                  child: ListTile(
+                    title: Text(document['stationId']),
+                    subtitle: Text(document['slotTiming']),
                   ),
-                ),
-              ],
+                );
+              }).toList(),
             ),
           );
         },
-    ),
-
-
-
+      ),
     );
   }
 }

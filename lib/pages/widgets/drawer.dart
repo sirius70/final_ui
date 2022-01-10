@@ -75,8 +75,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
 
         break;
       case 1:
+        var UID = await getUIDValuesSF();
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => slotDetails(),
+          builder: (context) => slotDetails(id: UID,),
         ));
         break;
       case 2:

@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,10 +86,10 @@ class _slotState extends State<slot> {
     final user = await FirebaseAuth.instance.currentUser;
     // Assumption: the query returns only one document, THE doc you are looking for.
     var slotDetail = {'uid': user.uid,
-      'username' : user.email,
-       'stationId': widget.id,
-        'slotTiming': dropdownvalue,
-        'date': DateTime.now()};
+      'username': user.email,
+      'stationId': widget.id,
+      'slotTiming': dropdownvalue,
+      'date': DateTime.now()};
 
     DocumentReference docRef = doc.reference;
     await FirebaseFirestore.instance
@@ -102,6 +100,18 @@ class _slotState extends State<slot> {
         .collection('slotDetails')
         .add(slotDetail);
 
+    QuerySnapshot querySnap1 = await FirebaseFirestore.instance
+        .collection('slotbooking')
+        .where('stationId', isEqualTo: widget.id)
+        .get();
+    QueryDocumentSnapshot doc1 = querySnap1.docs[
+    0];
+    DocumentReference docRef1 = doc1.reference;
+    var newItems = [];
+    newItems.add(dropdownvalue);
+    await FirebaseFirestore.instance.collection("slotbooking")
+        .doc(docRef1.id)
+        .update({"slotTimings": FieldValue.arrayRemove(newItems)});
     // Navigator.of(context).push(MaterialPageRoute(
     //     builder: (context) => slotDetails(
     //       slotModel: SlotModel(
@@ -115,9 +125,10 @@ class _slotState extends State<slot> {
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-          builder: (context) => qrCode(
-            stationModelid: widget.id,
-          )),
+          builder: (context) =>
+              qrCode(
+                stationModelid: widget.id,
+              )),
           (route) => false,
     );
   }
@@ -170,24 +181,51 @@ class _slotState extends State<slot> {
                       width: 200,
                       child: Card(
                         child: ListTile(
-                          title: Center(child: Text('Station ID ::: ${widget.id}')),
+                          title: Center(child: Text('Station ID ::: ${widget
+                              .id}')),
                         ),
                       ),
                     ),
                   ),
                   Container(
-                    child: DropdownButton(
-                      value: dropdownvalue,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      items: items.map((String items) {
-                        return DropdownMenuItem(value: items, child: Text(items));
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          dropdownvalue = newValue.toString();
-                        });
-                      },
-                    ),
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('slotbooking')
+                            .where('stationId', isEqualTo: widget.id)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          } else {
+                            return Container(
+                              height: 50,
+                              child: ListView(
+                                children:
+                                snapshot.data.docs.map<Widget>((document) {
+                                  List<String> data =
+                                  document['slotTimings'].cast<String>();
+                                  return Center(
+                                    child: Container(
+                                      child: DropdownButton(
+                                        value: dropdownvalue,
+                                        icon: Icon(Icons.keyboard_arrow_down),
+                                        items: data.map((String items) {
+                                          return DropdownMenuItem(
+                                              value: items, child: Text(items));
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            dropdownvalue = newValue.toString();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          }
+                        }),
                   ),
                   SizedBox(height: 90),
                   Container(
@@ -202,7 +240,8 @@ class _slotState extends State<slot> {
                                   // Retrieve the text the that user has entered by using the
                                   // TextEditingController.
                                     content: Text(
-                                        "Station-ID - ${widget.id}\nSlot - ${dropdownvalue}"));
+                                        "Station-ID - ${widget
+                                            .id}\nSlot - ${dropdownvalue}"));
                               },
                             );
                           },
